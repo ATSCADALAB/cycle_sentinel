@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Cycle Sentinel Main Application
-Ứng dụng chính của Cycle Sentinel
+Cycle Sentinel Main Application - Fixed Version
+Ứng dụng chính của Cycle Sentinel - Phiên bản đã fix
 
 This is the main entry point for the Cycle Sentinel e-bike monitoring system.
 Đây là điểm khởi đầu chính cho hệ thống giám sát xe đạp điện Cycle Sentinel.
@@ -14,7 +14,7 @@ Features / Tính năng:
 - Graceful shutdown handling / Xử lý tắt hệ thống một cách nhẹ nhàng
 
 Usage / Cách sử dụng:
-    python main.py [options]
+    python main_fixed.py [options]
     
 Options / Tùy chọn:
     --simulate    Use GPS simulator instead of real GPS / Sử dụng GPS simulator thay vì GPS thật
@@ -48,7 +48,9 @@ try:
         MAP_CONFIG, 
         VIOLATION_CONFIG,
         validate_config,
-        get_config_summary
+        get_config_summary,
+        MAPS_DIR,
+        LOGS_DIR
     )
     from utils.logger import (
         get_logger, 
@@ -57,7 +59,7 @@ try:
         PerformanceTimer
     )
     from sensors.gps_handler import GPSHandler, create_gps_handler
-    from sensors.gps_simulator import GPSSimulator, create_mixed_scenario
+    from sensors.gps_simulator import GPSSimulator, create_mixed_scenario, SimulationConfig, SimulationMode
     from enforcement.map_handler import MapHandler, create_map_handler
     from enforcement.violation_checker import ViolationChecker, create_violation_checker
     
@@ -68,22 +70,20 @@ except ImportError as e:
 
 class CycleSentinelApp:
     """
-    Ứng dụng chính Cycle Sentinel
-    Main Cycle Sentinel application
-    
-    Coordinates all system components and manages the main monitoring loop
-    Điều phối tất cả các thành phần hệ thống và quản lý vòng lặp giám sát chính
+    Ứng dụng chính Cycle Sentinel - Fixed Version
+    Main Cycle Sentinel application - Fixed Version
     """
     
     def __init__(self, use_simulator: bool = False, config_file: Optional[str] = None):
         """
         Khởi tạo ứng dụng Cycle Sentinel
         Initialize Cycle Sentinel application
-        
-        Args:
-            use_simulator: Sử dụng GPS simulator thay vì GPS thật / Use GPS simulator instead of real GPS
-            config_file: Đường dẫn file cấu hình tùy chọn / Optional config file path
         """
+        # Tạo thư mục cần thiết trước / Create necessary directories first
+        MAPS_DIR.mkdir(exist_ok=True)
+        LOGS_DIR.mkdir(exist_ok=True)
+        
+        # Khởi tạo logger NGAY / Initialize logger IMMEDIATELY
         self.logger = get_logger()
         self.use_simulator = use_simulator
         self.config_file = config_file
@@ -123,10 +123,7 @@ class CycleSentinelApp:
         })
     
     def _setup_signal_handlers(self):
-        """
-        Thiết lập signal handlers cho graceful shutdown
-        Setup signal handlers for graceful shutdown
-        """
+        """Thiết lập signal handlers cho graceful shutdown"""
         def signal_handler(signum, frame):
             signal_name = signal.Signals(signum).name
             self.logger.system_info(f"Received signal {signal_name}, initiating shutdown")
@@ -139,25 +136,95 @@ class CycleSentinelApp:
         if hasattr(signal, 'SIGHUP'):  # Unix only
             signal.signal(signal.SIGHUP, signal_handler)  # Hang up
     
-    def initialize_components(self) -> bool:
-        """
-        Khởi tạo tất cả các thành phần hệ thống
-        Initialize all system components
+    def create_sample_map_if_needed(self):
+        """Tạo sample map nếu chưa có"""
+        map_file = MAPS_DIR / "hcm_zones.json"
         
-        Returns:
-            bool: True nếu khởi tạo thành công / True if initialization successful
-        """
+        if not map_file.exists():
+            self.logger.system_info("Creating sample map file")
+            
+            sample_map = {
+                "version": "1.0",
+                "name": "Ho Chi Minh City Sample Zones",
+                "zones": [
+                    {
+                        "id": "district1_center",
+                        "name": "Quận 1 - Trung tâm",
+                        "zone_type": "commercial",
+                        "speed_limit": 20,
+                        "is_restricted": False,
+                        "bounds": {
+                            "south": 10.7730,
+                            "north": 10.7770,
+                            "west": 106.6980,
+                            "east": 106.7020
+                        }
+                    },
+                    {
+                        "id": "nguyen_hue_walking",
+                        "name": "Phố đi bộ Nguyễn Huệ",
+                        "zone_type": "pedestrian_only",
+                        "speed_limit": 0,
+                        "is_restricted": True,
+                        "bounds": {
+                            "south": 10.7740,
+                            "north": 10.7760,
+                            "west": 106.7000,
+                            "east": 106.7020
+                        }
+                    },
+                    {
+                        "id": "school_zone_1",
+                        "name": "Khu trường học - Lê Văn Tám",
+                        "zone_type": "school_zone",
+                        "speed_limit": 15,
+                        "is_restricted": False,
+                        "bounds": {
+                            "south": 10.7780,
+                            "north": 10.7820,
+                            "west": 106.7030,
+                            "east": 106.7070
+                        }
+                    },
+                    {
+                        "id": "residential_1",
+                        "name": "Quận 3 - Khu dân cư",
+                        "zone_type": "residential",
+                        "speed_limit": 25,
+                        "is_restricted": False,
+                        "bounds": {
+                            "south": 10.7860,
+                            "north": 10.7900,
+                            "west": 106.7110,
+                            "east": 106.7150
+                        }
+                    }
+                ]
+            }
+            
+            with open(map_file, 'w', encoding='utf-8') as f:
+                json.dump(sample_map, f, indent=2, ensure_ascii=False)
+            
+            self.logger.system_info(f"Sample map created: {map_file}")
+        
+        return str(map_file)
+    
+    def initialize_components(self) -> bool:
+        """Khởi tạo tất cả các thành phần hệ thống"""
         try:
             self.logger.system_info("Initializing system components...")
             
-            # 1. Validate configuration / Xác thực cấu hình
+            # 1. Validate configuration
             if not validate_config():
                 self.logger.system_error("Configuration validation failed")
                 return False
             
-            # 2. Initialize Map Handler / Khởi tạo Map Handler
+            # 2. Create sample map if needed
+            map_file = self.create_sample_map_if_needed()
+            
+            # 3. Initialize Map Handler
             self.logger.system_info("Initializing map handler...")
-            self.map_handler = create_map_handler(MAP_CONFIG["map_file"])
+            self.map_handler = create_map_handler(map_file)
             
             if not self.map_handler.is_map_loaded():
                 self.logger.system_error("Failed to load map data")
@@ -169,35 +236,41 @@ class CycleSentinelApp:
                 "zone_types": map_stats.get("zone_types", [])
             })
             
-            # 3. Initialize GPS Handler / Khởi tạo GPS Handler
+            # 4. Initialize GPS Handler
             self.logger.system_info("Initializing GPS handler...")
             
             if self.use_simulator:
                 self.logger.system_info("Using GPS simulator")
-                self.gps_handler = create_mixed_scenario()
+                config = SimulationConfig(
+                    mode=SimulationMode.MIXED_SCENARIO,
+                    duration_seconds=300,  # 5 minutes
+                    update_interval=1.0
+                )
+                self.gps_handler = GPSSimulator(config)
             else:
                 self.logger.system_info("Using real GPS hardware")
                 self.gps_handler = create_gps_handler()
             
-            # Test GPS connection / Test kết nối GPS
+            # Test GPS connection
             if not self.gps_handler.connect():
                 self.logger.system_error("Failed to connect to GPS")
                 return False
             
             self.logger.system_info("GPS handler initialized successfully")
             
-            # 4. Initialize Violation Checker / Khởi tạo Violation Checker
+            # 5. Initialize Violation Checker
             self.logger.system_info("Initializing violation checker...")
             self.violation_checker = create_violation_checker(self.map_handler)
             self.logger.system_info("Violation checker initialized successfully")
             
-            # 5. Wait for GPS fix if using real hardware / Chờ GPS fix nếu dùng phần cứng thật
+            # 6. Wait for GPS fix if using real hardware
             if not self.use_simulator:
                 self.logger.system_info("Waiting for GPS fix...")
-                if not self.gps_handler.wait_for_fix(timeout=30):
-                    self.logger.system_warning("GPS fix timeout - continuing anyway")
-                else:
-                    self.logger.system_info("GPS fix acquired")
+                if hasattr(self.gps_handler, 'wait_for_fix'):
+                    if not self.gps_handler.wait_for_fix(timeout=30):
+                        self.logger.system_warning("GPS fix timeout - continuing anyway")
+                    else:
+                        self.logger.system_info("GPS fix acquired")
             
             self.logger.system_info("All components initialized successfully")
             return True
@@ -209,13 +282,7 @@ class CycleSentinelApp:
             return False
     
     def start_monitoring(self) -> bool:
-        """
-        Bắt đầu giám sát hệ thống
-        Start system monitoring
-        
-        Returns:
-            bool: True nếu bắt đầu thành công / True if started successfully
-        """
+        """Bắt đầu giám sát hệ thống"""
         if self.is_running:
             self.logger.system_warning("Monitoring already running")
             return False
@@ -224,7 +291,7 @@ class CycleSentinelApp:
             self.is_running = True
             self.shutdown_requested = False
             
-            # Start monitoring thread / Bắt đầu luồng giám sát
+            # Start monitoring thread
             self.monitoring_thread = threading.Thread(
                 target=self._monitoring_loop,
                 name="MonitoringThread",
@@ -232,7 +299,7 @@ class CycleSentinelApp:
             )
             self.monitoring_thread.start()
             
-            # Start health check thread / Bắt đầu luồng kiểm tra sức khỏe
+            # Start health check thread
             self.health_check_thread = threading.Thread(
                 target=self._health_check_loop,
                 name="HealthCheckThread", 
@@ -251,45 +318,42 @@ class CycleSentinelApp:
             return False
     
     def _monitoring_loop(self):
-        """
-        Vòng lặp giám sát chính
-        Main monitoring loop
-        """
+        """Vòng lặp giám sát chính"""
         self.logger.system_info("Monitoring loop started")
         
         try:
             while self.is_running and not self.shutdown_requested:
                 try:
                     with PerformanceTimer("monitoring_cycle"):
-                        # Read GPS data / Đọc dữ liệu GPS
+                        # Read GPS data
                         gps_data = self.gps_handler.read_position()
                         
                         if gps_data:
                             self.stats["total_gps_reads"] += 1
                             self.stats["last_gps_time"] = datetime.now()
                             
-                            # Check for violations / Kiểm tra vi phạm
+                            # ✅ ĐOẠN NÀY QUAN TRỌNG - CHECK VIOLATION VÀ LOG
                             violation_data = self.violation_checker.check_violation(gps_data)
                             
                             if violation_data:
-                                # Log violation / Ghi log vi phạm
+                                # ✅ LOG VIOLATION - ĐÂY LÀ CHỖ LOGGING DIỄN RA
                                 self.logger.log_violation(violation_data)
                                 self.stats["total_violations"] += 1
                                 self.stats["last_violation_time"] = datetime.now()
                                 
-                                # Print violation info to console / In thông tin vi phạm ra console
+                                # Print violation info to console
                                 self._print_violation_info(violation_data, gps_data)
                             else:
-                                # Print normal GPS info / In thông tin GPS bình thường
+                                # Print normal GPS info
                                 if SYSTEM_CONFIG["debug_mode"]:
                                     self._print_gps_info(gps_data)
                         
                         else:
-                            # No GPS data available / Không có dữ liệu GPS
+                            # No GPS data available
                             if SYSTEM_CONFIG["debug_mode"]:
                                 print(".", end="", flush=True)  # Progress indicator
                     
-                    # Sleep for next cycle / Nghỉ cho chu kỳ tiếp theo
+                    # Sleep for next cycle
                     time.sleep(GPS_CONFIG["read_interval"])
                     
                 except Exception as e:
@@ -308,22 +372,19 @@ class CycleSentinelApp:
             self.logger.system_info("Monitoring loop ended")
     
     def _health_check_loop(self):
-        """
-        Vòng lặp kiểm tra sức khỏe hệ thống
-        System health check loop
-        """
+        """Vòng lặp kiểm tra sức khỏe hệ thống"""
         self.logger.system_info("Health check loop started")
         
         try:
             while self.is_running and not self.shutdown_requested:
                 try:
-                    # Update system stats / Cập nhật thống kê hệ thống
+                    # Update system stats
                     self._update_system_stats()
                     
-                    # Check component health / Kiểm tra sức khỏe các thành phần
+                    # Check component health
                     self._check_component_health()
                     
-                    # Sleep for next check / Nghỉ cho lần kiểm tra tiếp theo
+                    # Sleep for next check
                     time.sleep(SYSTEM_CONFIG["heartbeat_interval"])
                     
                 except Exception as e:
@@ -341,36 +402,30 @@ class CycleSentinelApp:
             self.logger.system_info("Health check loop ended")
     
     def _update_system_stats(self):
-        """
-        Cập nhật thống kê hệ thống
-        Update system statistics
-        """
+        """Cập nhật thống kê hệ thống"""
         self.stats["system_uptime"] = (datetime.now() - self.startup_time).total_seconds()
     
     def _check_component_health(self):
-        """
-        Kiểm tra sức khỏe các thành phần
-        Check component health
-        """
+        """Kiểm tra sức khỏe các thành phần"""
         health_issues = []
         
-        # Check GPS handler / Kiểm tra GPS handler
+        # Check GPS handler
         if self.gps_handler:
             if not self.use_simulator and hasattr(self.gps_handler, 'is_position_valid'):
                 if not self.gps_handler.is_position_valid():
                     health_issues.append("GPS position invalid or stale")
         
-        # Check map handler / Kiểm tra map handler
+        # Check map handler
         if self.map_handler and not self.map_handler.is_map_loaded():
             health_issues.append("Map not loaded")
         
-        # Check last GPS reading / Kiểm tra lần đọc GPS cuối
+        # Check last GPS reading
         if self.stats["last_gps_time"]:
             time_since_gps = (datetime.now() - self.stats["last_gps_time"]).total_seconds()
             if time_since_gps > 60:  # No GPS data for 1 minute
                 health_issues.append(f"No GPS data for {time_since_gps:.0f} seconds")
         
-        # Log health issues / Ghi log các vấn đề sức khỏe
+        # Log health issues
         if health_issues:
             self.logger.system_warning("System health issues detected", {
                 "issues": health_issues
@@ -379,14 +434,7 @@ class CycleSentinelApp:
             self.logger.system_debug("System health check passed")
     
     def _print_violation_info(self, violation_data: Dict[str, Any], gps_data: Dict[str, Any]):
-        """
-        In thông tin vi phạm ra console
-        Print violation information to console
-        
-        Args:
-            violation_data: Dữ liệu vi phạm / Violation data
-            gps_data: Dữ liệu GPS / GPS data
-        """
+        """In thông tin vi phạm ra console"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         violation_type = violation_data["violation_type"]
         
@@ -395,40 +443,36 @@ class CycleSentinelApp:
             speed_limit = violation_data["speed_data"]["speed_limit"]
             excess_speed = violation_data["speed_data"]["excess_speed"]
             
-            print(f"\n🚨 [{timestamp}] SPEED VIOLATION DETECTED!")
-            print(f"   📍 Location: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
-            print(f"   🏃 Speed: {current_speed:.1f} km/h (Limit: {speed_limit:.1f} km/h)")
-            print(f"   ⚡ Excess: +{excess_speed:.1f} km/h")
-            print(f"   🎯 Zone: {violation_data['zone_info']['zone_name']}")
-            print(f"   📊 Confidence: {violation_data['confidence']:.2f}")
+            print(f"\n🚨 [{timestamp}] PHÁT HIỆN VI PHẠM TỐC ĐỘ!")
+            print(f"   📍 Vị trí: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
+            print(f"   🏃 Tốc độ: {current_speed:.1f} km/h (Giới hạn: {speed_limit:.1f} km/h)")
+            print(f"   ⚡ Vượt quá: +{excess_speed:.1f} km/h")
+            print(f"   🎯 Khu vực: {violation_data['zone_info']['zone_name']}")
+            print(f"   📊 Độ tin cậy: {violation_data['confidence']:.2f}")
+            print(f"   💾 ĐÃ LOG VÀO FILE: logs/violations.log")
             
         elif violation_type == "restricted_zone":
             current_speed = violation_data["speed_data"]["current_speed"]
             
-            print(f"\n🚫 [{timestamp}] RESTRICTED ZONE VIOLATION!")
-            print(f"   📍 Location: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
-            print(f"   🏃 Speed: {current_speed:.1f} km/h (Zone: RESTRICTED)")
-            print(f"   🎯 Zone: {violation_data['zone_info']['zone_name']}")
-            print(f"   📊 Confidence: {violation_data['confidence']:.2f}")
+            print(f"\n🚫 [{timestamp}] PHÁT HIỆN VI PHẠM KHU VỰC CẤM!")
+            print(f"   📍 Vị trí: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
+            print(f"   🏃 Tốc độ: {current_speed:.1f} km/h trong KHU VỰC CẤM")
+            print(f"   🎯 Khu vực: {violation_data['zone_info']['zone_name']}")
+            print(f"   📊 Độ tin cậy: {violation_data['confidence']:.2f}")
+            print(f"   💾 ĐÃ LOG VÀO FILE: logs/violations.log")
         
         print()
     
     def _print_gps_info(self, gps_data: Dict[str, Any]):
-        """
-        In thông tin GPS bình thường ra console
-        Print normal GPS information to console
-        
-        Args:
-            gps_data: Dữ liệu GPS / GPS data
-        """
+        """In thông tin GPS bình thường ra console"""
         timestamp = datetime.now().strftime("%H:%M:%S")
         lat = gps_data["latitude"]
         lon = gps_data["longitude"]
         speed = gps_data["speed_kmh"]
         
-        # Get current zone info / Lấy thông tin zone hiện tại
+        # Get current zone info
         zone = self.map_handler.find_zone_at_position(lat, lon)
-        zone_name = zone.name if zone else "Unknown Zone"
+        zone_name = zone.name if zone else "Ngoài khu vực"
         speed_limit = zone.speed_limit if zone else 25.0
         
         print(f"[{timestamp}] 📍 {lat:.6f}, {lon:.6f} | "
@@ -436,18 +480,12 @@ class CycleSentinelApp:
               f"🎯 {zone_name}")
     
     def request_shutdown(self):
-        """
-        Yêu cầu tắt hệ thống
-        Request system shutdown
-        """
+        """Yêu cầu tắt hệ thống"""
         self.logger.system_info("Shutdown requested")
         self.shutdown_requested = True
     
     def stop_monitoring(self):
-        """
-        Dừng giám sát hệ thống
-        Stop system monitoring
-        """
+        """Dừng giám sát hệ thống"""
         if not self.is_running:
             return
         
@@ -456,7 +494,7 @@ class CycleSentinelApp:
         self.is_running = False
         self.shutdown_requested = True
         
-        # Wait for threads to finish / Chờ các luồng kết thúc
+        # Wait for threads to finish
         if self.monitoring_thread and self.monitoring_thread.is_alive():
             self.monitoring_thread.join(timeout=5.0)
         
@@ -466,19 +504,16 @@ class CycleSentinelApp:
         self.logger.system_info("System monitoring stopped")
     
     def cleanup(self):
-        """
-        Dọn dẹp tài nguyên hệ thống
-        Cleanup system resources
-        """
+        """Dọn dẹp tài nguyên hệ thống"""
         self.logger.system_info("Cleaning up system resources...")
         
         try:
-            # Disconnect GPS / Ngắt kết nối GPS
+            # Disconnect GPS
             if self.gps_handler:
                 self.gps_handler.disconnect()
                 self.logger.system_info("GPS disconnected")
             
-            # Log final statistics / Ghi log thống kê cuối
+            # Log final statistics
             self._log_final_statistics()
             
         except Exception as e:
@@ -487,24 +522,15 @@ class CycleSentinelApp:
         self.logger.system_info("System cleanup completed")
     
     def _log_final_statistics(self):
-        """
-        Ghi log thống kê cuối cùng
-        Log final statistics
-        """
+        """Ghi log thống kê cuối cùng"""
         final_stats = self.get_system_statistics()
         self.logger.system_info("Final system statistics", final_stats)
     
     def get_system_statistics(self) -> Dict[str, Any]:
-        """
-        Lấy thống kê toàn hệ thống
-        Get comprehensive system statistics
-        
-        Returns:
-            Dict: System statistics / Thống kê hệ thống
-        """
+        """Lấy thống kê toàn hệ thống"""
         stats = self.stats.copy()
         
-        # Add component statistics / Thêm thống kê các thành phần
+        # Add component statistics
         if self.gps_handler and hasattr(self.gps_handler, 'get_statistics'):
             stats["gps_stats"] = self.gps_handler.get_statistics()
         
@@ -514,7 +540,7 @@ class CycleSentinelApp:
         if self.violation_checker:
             stats["violation_stats"] = self.violation_checker.get_statistics()
         
-        # Calculate rates / Tính tỷ lệ
+        # Calculate rates
         uptime_hours = stats["system_uptime"] / 3600
         if uptime_hours > 0:
             stats["gps_reads_per_hour"] = stats["total_gps_reads"] / uptime_hours
@@ -523,40 +549,34 @@ class CycleSentinelApp:
         return stats
     
     def run(self) -> int:
-        """
-        Chạy ứng dụng chính
-        Run the main application
-        
-        Returns:
-            int: Exit code (0 = success, non-zero = error)
-        """
+        """Chạy ứng dụng chính"""
         try:
-            # Log system startup / Ghi log khởi động hệ thống
+            # Log system startup
             log_system_startup()
             
-            # Show configuration summary / Hiển thị tóm tắt cấu hình
+            # Show configuration summary
             config_summary = get_config_summary()
             self.logger.system_info("System configuration", config_summary)
             
-            # Initialize components / Khởi tạo các thành phần
+            # Initialize components
             if not self.initialize_components():
                 self.logger.system_error("Component initialization failed")
                 return 1
             
-            # Start monitoring / Bắt đầu giám sát
+            # Start monitoring
             if not self.start_monitoring():
                 self.logger.system_error("Failed to start monitoring")
                 return 1
             
-            # Show startup message / Hiển thị thông báo khởi động
+            # Show startup message
             self._print_startup_message()
             
-            # Main loop / Vòng lặp chính
+            # Main loop
             try:
                 while not self.shutdown_requested:
                     time.sleep(1)
                     
-                    # Check if monitoring thread is still alive / Kiểm tra monitoring thread còn sống không
+                    # Check if monitoring thread is still alive
                     if self.monitoring_thread and not self.monitoring_thread.is_alive():
                         self.logger.system_error("Monitoring thread died unexpectedly")
                         break
@@ -573,16 +593,13 @@ class CycleSentinelApp:
             return 1
         
         finally:
-            # Cleanup / Dọn dẹp
+            # Cleanup
             self.stop_monitoring()
             self.cleanup()
             log_system_shutdown()
     
     def _print_startup_message(self):
-        """
-        In thông báo khởi động ra console
-        Print startup message to console
-        """
+        """In thông báo khởi động ra console"""
         print("\n" + "="*60)
         print("🚴 CYCLE SENTINEL - E-BIKE MONITORING SYSTEM")
         print("="*60)
@@ -592,28 +609,25 @@ class CycleSentinelApp:
         print(f"⚙️  Debug Mode: {'ON' if SYSTEM_CONFIG['debug_mode'] else 'OFF'}")
         print(f"📊 Monitoring: GPS + Violations")
         print(f"🔄 Update Interval: {GPS_CONFIG['read_interval']}s")
+        print(f"💾 Logs Directory: {LOGS_DIR}")
         print("="*60)
         print("🟢 System is RUNNING - Press Ctrl+C to stop")
+        print("📝 Vi phạm sẽ được log vào: logs/violations.log")
+        print("📋 System logs: logs/system.log")
         print("="*60)
         print()
 
 def parse_arguments():
-    """
-    Parse command line arguments
-    Phân tích các tham số dòng lệnh
-    
-    Returns:
-        argparse.Namespace: Parsed arguments
-    """
+    """Parse command line arguments"""
     parser = argparse.ArgumentParser(
         description="Cycle Sentinel - E-bike Speed and Zone Monitoring System",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples / Ví dụ:
-  python main.py                    # Run with real GPS / Chạy với GPS thật
-  python main.py --simulate         # Run with GPS simulator / Chạy với GPS simulator
-  python main.py --debug            # Run in debug mode / Chạy ở chế độ debug
-  python main.py --test             # Run test scenarios / Chạy các kịch bản test
+  python main_fixed.py                    # Run with real GPS / Chạy với GPS thật
+  python main_fixed.py --simulate         # Run with GPS simulator / Chạy với GPS simulator
+  python main_fixed.py --debug            # Run in debug mode / Chạy ở chế độ debug
+  python main_fixed.py --test             # Run test scenarios / Chạy các kịch bản test
         """
     )
     
@@ -650,19 +664,16 @@ Examples / Ví dụ:
     return parser.parse_args()
 
 def main():
-    """
-    Hàm main chính
-    Main entry point function
-    """
-    # Parse command line arguments / Phân tích tham số dòng lệnh
+    """Hàm main chính"""
+    # Parse command line arguments
     args = parse_arguments()
     
-    # Override config with command line arguments / Ghi đè config với tham số dòng lệnh
+    # Override config with command line arguments
     if args.debug:
         SYSTEM_CONFIG["debug_mode"] = True
         print("🐛 Debug mode enabled")
     
-    # Create and run application / Tạo và chạy ứng dụng
+    # Create and run application
     try:
         app = CycleSentinelApp(
             use_simulator=args.simulate or args.test,

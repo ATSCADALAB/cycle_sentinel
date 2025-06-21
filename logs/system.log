@@ -1,0 +1,53 @@
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - GPS Simulator initialized | DATA: {"mode": "custom_route", "duration": 60, "start_position": [10.7749, 106.7004]}
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Custom route set with 4 waypoints
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Map Handler initialized | DATA: {"map_file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_realistic.json", "auto_reload": true}
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Loading map from E:\Software\CycleSentinel\cycle_sentinel\maps\test_hcm_realistic.json
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Map loaded successfully | DATA: {"file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_realistic.json", "zones_count": 6, "zone_types": ["commercial", "pedestrian_only", "school_zone", "hospital_zone", "residential", "main_road"]}
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - Violation Checker initialized | DATA: {"device_id": "CS_DEV_001", "enabled_violations": ["speed_violation", "restricted_zone", "wrong_direction"]}
+2025-06-21 10:20:38 - cycle_sentinel.system - INFO - GPS simulation started | DATA: {"mode": "custom_route", "waypoints": 4}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - GPS Simulator initialized | DATA: {"mode": "custom_route", "duration": 45, "start_position": [10.7749, 106.7004]}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Custom route set with 4 waypoints
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Map Handler initialized | DATA: {"map_file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "auto_reload": true}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Loading map from E:\Software\CycleSentinel\cycle_sentinel\maps\test_hcm_tieng_viet.json
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Map loaded successfully | DATA: {"file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "zones_count": 6, "zone_types": ["commercial", "pedestrian_only", "school_zone", "hospital_zone", "residential", "main_road"]}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - Violation Checker initialized | DATA: {"device_id": "CS_DEV_001", "enabled_violations": ["speed_violation", "restricted_zone", "wrong_direction"]}
+2025-06-21 10:25:17 - cycle_sentinel.system - INFO - GPS simulation started | DATA: {"mode": "custom_route", "waypoints": 4}
+2025-06-21 10:26:02 - cycle_sentinel.system - INFO - Simulation duration completed
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - GPS Simulator initialized | DATA: {"mode": "custom_route", "duration": 30, "start_position": [10.7749, 106.7004]}
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Custom route set with 5 waypoints
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Map Handler initialized | DATA: {"map_file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "auto_reload": true}
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Loading map from E:\Software\CycleSentinel\cycle_sentinel\maps\test_hcm_tieng_viet.json
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Map loaded successfully | DATA: {"file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "zones_count": 6, "zone_types": ["commercial", "pedestrian_only", "school_zone", "hospital_zone", "residential", "main_road"]}
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - Violation Checker initialized | DATA: {"device_id": "CS_DEV_001", "enabled_violations": ["speed_violation", "restricted_zone", "wrong_direction"]}
+2025-06-21 10:26:35 - cycle_sentinel.system - INFO - GPS simulation started | DATA: {"mode": "custom_route", "waypoints": 5}
+2025-06-21 10:27:05 - cycle_sentinel.system - INFO - Simulation duration completed
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - GPS Simulator initialized | DATA: {"mode": "custom_route", "duration": 120, "start_position": [10.7749, 106.7004]}
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Custom route set with 5 waypoints
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Map Handler initialized | DATA: {"map_file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "auto_reload": true}
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Loading map from E:\Software\CycleSentinel\cycle_sentinel\maps\test_hcm_tieng_viet.json
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Map loaded successfully | DATA: {"file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "zones_count": 6, "zone_types": ["commercial", "pedestrian_only", "school_zone", "hospital_zone", "residential", "main_road"]}
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - Violation Checker initialized | DATA: {"device_id": "CS_DEV_001", "enabled_violations": ["speed_violation", "restricted_zone", "wrong_direction"]}
+2025-06-21 10:27:13 - cycle_sentinel.system - INFO - GPS simulation started | DATA: {"mode": "custom_route", "waypoints": 5}
+2025-06-21 10:29:13 - cycle_sentinel.system - INFO - Simulation duration completed
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - GPS Simulator initialized | DATA: {"mode": "custom_route", "duration": 45, "start_position": [10.7749, 106.7004]}
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Custom route set with 5 waypoints
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Map Handler initialized | DATA: {"map_file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "auto_reload": true}
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Loading map from E:\Software\CycleSentinel\cycle_sentinel\maps\test_hcm_tieng_viet.json
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Map loaded successfully | DATA: {"file": "E:\\Software\\CycleSentinel\\cycle_sentinel\\maps\\test_hcm_tieng_viet.json", "zones_count": 6, "zone_types": ["commercial", "pedestrian_only", "school_zone", "hospital_zone", "residential", "main_road"]}
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - Violation Checker initialized | DATA: {"device_id": "CS_DEV_001", "enabled_violations": ["speed_violation", "restricted_zone", "wrong_direction"]}
+2025-06-21 10:29:42 - cycle_sentinel.system - INFO - GPS simulation started | DATA: {"mode": "custom_route", "waypoints": 5}
+2025-06-21 10:30:27 - cycle_sentinel.system - INFO - Simulation duration completed
+2025-06-21 10:37:47 - cycle_sentinel.system - INFO - Logging system initialized | DATA: {"device_id": "CS_DEV_001", "version": "1.0.0", "log_level": "INFO"}
+2025-06-21 10:37:47 - cycle_sentinel.system - INFO - Test thông tin hệ thống | DATA: {"test_type": "system_logging", "timestamp": "2025-06-21T10:37:47.621504"}
+2025-06-21 10:37:47 - cycle_sentinel.system - WARNING - Test cảnh báo hệ thống | DATA: {"warning_type": "test_warning"}
+2025-06-21 10:37:47 - cycle_sentinel.system - ERROR - Test lỗi hệ thống | DATA: {"error_type": "test_error"}
+2025-06-21 10:37:47 - cycle_sentinel.system - INFO - === CYCLE SENTINEL STARTUP === | DATA: {"system_name": "Cycle Sentinel", "version": "1.0.0", "device_id": "CS_DEV_001", "timestamp": "2025-06-21T10:37:47.622549"}
+2025-06-21 10:37:47 - cycle_sentinel.system - INFO - === CYCLE SENTINEL SHUTDOWN === | DATA: {"timestamp": "2025-06-21T10:37:47.622549"}
+2025-06-21 10:37:47 - cycle_sentinel.system - INFO - Violation logged: speed_violation | DATA: {"violation_id": "TEST_VL_001", "zone": "Test Zone - Quận 1", "speed": 35.0}
+2025-06-21 10:37:48 - cycle_sentinel.system - INFO - Violation logged: restricted_zone | DATA: {"violation_id": "TEST_VL_002", "zone": "Test Zone - Phố đi bộ", "speed": 12.0}
+2025-06-21 10:37:48 - cycle_sentinel.system - INFO - Violation logged: speed_violation | DATA: {"violation_id": "TEST_VL_003", "zone": "Test Zone - Khu trường học", "speed": 25.0}
