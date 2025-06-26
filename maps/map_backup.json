@@ -1,0 +1,253 @@
+{
+  "version": "1.0",
+  "name": "Tuyến đường số 1 - TP.HCM",
+  "created": "2025-06-26T14:48:35.123456",
+  "metadata": {
+    "source": "manual_mapping_route",
+    "generator": "cycle-sentinel-route-mapper",
+    "copyright": "Dữ liệu mô phỏng tuyến đường cho Cycle Sentinel",
+    "timestamp": "2025-06-26T07:48:35Z",
+    "conversion_stats": {
+      "total_features": 8,
+      "converted_zones": 8,
+      "skipped_features": 0,
+      "errors": []
+    },
+    "route_info": {
+      "start_point": [10.789000, 106.630000],
+      "end_point": [10.792000, 106.632500],
+      "total_length": "2.8km",
+      "center_coordinates": [10.790351, 106.631105]
+    }
+  },
+  "zones": [
+    {
+      "id": "route_001_segment_1",
+      "name": "Đường số 1 - Đoạn khu dân cư (đầu tuyến)",
+      "zone_type": "residential",
+      "speed_limit": 25,
+      "is_restricted": false,
+      "is_active": true,
+      "bounds": {
+        "west": 106.629800,
+        "east": 106.630400,
+        "south": 10.788800,
+        "north": 10.789400
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_1",
+          "highway": "residential",
+          "name": "Đường số 1",
+          "surface": "asphalt",
+          "lanes": "2",
+          "oneway": "no",
+          "sidewalk": "both",
+          "segment": "residential_start",
+          "houses": "yes"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_segment_2", 
+      "name": "Đường số 1 - Đoạn qua chợ",
+      "zone_type": "commercial",
+      "speed_limit": 15,
+      "is_restricted": false,
+      "is_active": true,
+      "bounds": {
+        "west": 106.630400,
+        "east": 106.630800,
+        "south": 10.789400,
+        "north": 10.789800
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_2",
+          "highway": "secondary",
+          "name": "Đường số 1",
+          "surface": "asphalt", 
+          "lanes": "2",
+          "oneway": "no",
+          "sidewalk": "both",
+          "segment": "market_area",
+          "commercial": "yes"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_segment_3",
+      "name": "Đường số 1 - Đoạn khu trường học",
+      "zone_type": "school_zone",
+      "speed_limit": 10,
+      "is_restricted": true,
+      "is_active": true,
+      "bounds": {
+        "west": 106.630800,
+        "east": 106.631400,
+        "south": 10.789800,
+        "north": 10.790600
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_3",
+          "highway": "secondary",
+          "name": "Đường số 1",
+          "surface": "asphalt",
+          "lanes": "2", 
+          "oneway": "no",
+          "sidewalk": "both",
+          "segment": "school_zone",
+          "school_zone": "yes",
+          "restricted_hours": "07:00-17:00"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_segment_4",
+      "name": "Đường số 1 - Đoạn qua bệnh viện",
+      "zone_type": "hospital_zone", 
+      "speed_limit": 20,
+      "is_restricted": true,
+      "is_active": true,
+      "bounds": {
+        "west": 106.631400,
+        "east": 106.631800,
+        "south": 10.790600,
+        "north": 10.791000
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_4",
+          "highway": "secondary",
+          "name": "Đường số 1",
+          "surface": "asphalt",
+          "lanes": "2",
+          "oneway": "no", 
+          "sidewalk": "both",
+          "segment": "hospital_zone",
+          "hospital": "nearby",
+          "quiet_zone": "yes"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_segment_5",
+      "name": "Đường số 1 - Đoạn công nghiệp nhẹ",
+      "zone_type": "residential",
+      "speed_limit": 25,
+      "is_restricted": false,
+      "is_active": true,
+      "bounds": {
+        "west": 106.631800,
+        "east": 106.632200,
+        "south": 10.791000,
+        "north": 10.791400
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_5",
+          "highway": "secondary",
+          "name": "Đường số 1",
+          "surface": "asphalt",
+          "lanes": "4",
+          "oneway": "no",
+          "sidewalk": "both",
+          "segment": "light_industrial",
+          "industrial": "light"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_segment_6",
+      "name": "Đường số 1 - Đoạn khu dân cư cao cấp",
+      "zone_type": "residential",
+      "speed_limit": 25,
+      "is_restricted": false,
+      "is_active": true,
+      "bounds": {
+        "west": 106.632200,
+        "east": 106.632600,
+        "south": 10.791400,
+        "north": 10.791800
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "way/route_001_seg_6",
+          "highway": "residential",
+          "name": "Đường số 1",
+          "surface": "asphalt",
+          "lanes": "2",
+          "oneway": "no",
+          "sidewalk": "both",
+          "segment": "upscale_residential",
+          "residential": "villa"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_intersection_1",
+      "name": "Ngã tư Đường số 1 - Đường Lê Văn Sỹ",
+      "zone_type": "major_intersection",
+      "speed_limit": 25,
+      "is_restricted": true,
+      "is_active": true,
+      "bounds": {
+        "west": 106.630750,
+        "east": 106.630850,
+        "south": 10.789750,
+        "north": 10.789850
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "node/route_001_intersection_1",
+          "highway": "traffic_signals",
+          "name": "Ngã tư Đường số 1 - Đường Lê Văn Sỹ",
+          "traffic_signals": "yes",
+          "crossing": "traffic_signals",
+          "intersection": "signalized"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    },
+    {
+      "id": "route_001_intersection_2",
+      "name": "Ngã tư Đường số 1 - Đường Cách Mạng Tháng 8",
+      "zone_type": "major_intersection",
+      "speed_limit": 20,
+      "is_restricted": true,
+      "is_active": true,
+      "bounds": {
+        "west": 106.631550,
+        "east": 106.631650,
+        "south": 10.790750,
+        "north": 10.790850
+      },
+      "metadata": {
+        "source": "manual_survey_route",
+        "original_properties": {
+          "@id": "node/route_001_intersection_2",
+          "highway": "traffic_signals",
+          "name": "Ngã tư Đường số 1 - Đường Cách Mạng Tháng 8",
+          "traffic_signals": "yes",
+          "crossing": "traffic_signals",
+          "intersection": "signalized"
+        },
+        "imported_at": "2025-06-26T14:48:35.123456"
+      }
+    }
+  ]
+}
