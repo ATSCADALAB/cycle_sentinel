@@ -1,0 +1,718 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "name": "Phường Tân Thành E-bike Zone Map",
+    "description": "Detailed e-bike speed zones and routes for Tan Thanh Ward, Tan Phu District, HCMC",
+    "version": "2.0.0",
+    "created": "2025-06-26T10:00:00Z",
+    "coverage_area": "Phường Tân Thành, Quận Tân Phú, TP.HCM",
+    "coordinate_system": "WGS84",
+    "authority": "Cycle Sentinel Tân Thành",
+    "total_zones": 8,
+    "total_routes": 15,
+    "ward_code": "TT",
+    "ward_area_km2": 2.45,
+    "population": 45000,
+    "boundaries": {
+      "north": "Đường Trường Chinh",
+      "south": "Đường Lũy Bán Bích", 
+      "east": "Đường Phạm Văn Đồng",
+      "west": "Đường Tân Sơn Nhì"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "tan_thanh_center",
+      "properties": {
+        "zone_id": "TT_001",
+        "name": "Trung tâm Phường Tân Thành",
+        "zone_type": "commercial_center", 
+        "speed_limit_kmh": 20,
+        "description": "Khu trung tâm phường - UBND, Chợ Tân Thành",
+        "enforcement_level": "high",
+        "peak_hours": ["07:00-09:00", "17:00-19:00"],
+        "restrictions": ["no_parking_main_roads", "yield_to_pedestrians"],
+        "landmarks": ["UBND Phường Tân Thành", "Chợ Tân Thành", "Trung tâm Văn hóa"],
+        "address_range": "Đường Lê Trọng Tấn (số 1-150)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6320, 10.8070],
+          [106.6380, 10.8070],
+          [106.6380, 10.8130],
+          [106.6320, 10.8130],
+          [106.6320, 10.8070]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_schools",
+      "properties": {
+        "zone_id": "TT_002",
+        "name": "Khu trường học Tân Thành",
+        "zone_type": "school_zone",
+        "speed_limit_kmh": 12,
+        "description": "Tập trung các trường học từ mầm non đến THPT",
+        "enforcement_level": "maximum",
+        "active_hours": ["06:30-11:30", "13:00-17:30"],
+        "restrictions": ["mandatory_helmet", "no_racing", "stop_for_children", "no_horn"],
+        "landmarks": ["THPT Tân Thành", "THCS Tân Thành", "Trường Tiểu học Tân Thành", "Mầm non Hoa Sen"],
+        "address_range": "Đường Trường Chinh (số 200-350)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6280, 10.8130],
+          [106.6340, 10.8130],
+          [106.6340, 10.8190],
+          [106.6280, 10.8190],
+          [106.6280, 10.8130]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_hospital",
+      "properties": {
+        "zone_id": "TT_003", 
+        "name": "Khu y tế Tân Thành",
+        "zone_type": "hospital_zone",
+        "speed_limit_kmh": 10,
+        "description": "Bệnh viện và các cơ sở y tế",
+        "enforcement_level": "maximum",
+        "active_hours": ["00:00-24:00"],
+        "restrictions": ["no_horn", "emergency_priority", "quiet_zone", "patient_crossing"],
+        "landmarks": ["Bệnh viện Đa khoa Tân Thành", "Phòng khám 115", "Nhà thuốc GPP"],
+        "address_range": "Đường Âu Cơ (số 100-200)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6250, 10.8070],
+          [106.6320, 10.8070],
+          [106.6320, 10.8130],
+          [106.6250, 10.8130],
+          [106.6250, 10.8070]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_residential_north", 
+      "properties": {
+        "zone_id": "TT_004",
+        "name": "Khu dân cư Tân Thành Bắc",
+        "zone_type": "residential",
+        "speed_limit_kmh": 25,
+        "description": "Khu dân cư với nhiều hẻm nhỏ và đường nội bộ",
+        "enforcement_level": "medium",
+        "active_hours": ["00:00-24:00"],
+        "restrictions": ["quiet_zone_22:00-06:00", "narrow_alley_5kmh", "children_playing"],
+        "landmarks": ["Khu nhà ở xã hội", "Siêu thị Co.opmart", "Công viên nhỏ Tân Thành"],
+        "address_range": "Các hẻm đường Trường Chinh"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6340, 10.8130],
+          [106.6420, 10.8130],
+          [106.6420, 10.8210],
+          [106.6340, 10.8210],
+          [106.6340, 10.8130]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_residential_south",
+      "properties": {
+        "zone_id": "TT_005",
+        "name": "Khu dân cư Tân Thành Nam", 
+        "zone_type": "residential",
+        "speed_limit_kmh": 25,
+        "description": "Khu dân cư mật độ cao, nhiều nhà trọ sinh viên",
+        "enforcement_level": "medium", 
+        "active_hours": ["00:00-24:00"],
+        "restrictions": ["quiet_zone_22:00-06:00", "student_area", "motorbike_sharing"],
+        "landmarks": ["Khu trọ sinh viên", "Quán ăn đường Lũy Bán Bích", "Cửa hàng tiện lợi 24h"],
+        "address_range": "Đường Lũy Bán Bích (số 50-200)"
+      },
+      "geometry": {
+        "type": "Polygon", 
+        "coordinates": [[
+          [106.6320, 10.8010],
+          [106.6380, 10.8010],
+          [106.6380, 10.8070],
+          [106.6320, 10.8070],
+          [106.6320, 10.8010]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_market_area",
+      "properties": {
+        "zone_id": "TT_006",
+        "name": "Khu chợ và thương mại",
+        "zone_type": "market_commercial",
+        "speed_limit_kmh": 15,
+        "description": "Chợ Tân Thành và khu mua sắm",
+        "enforcement_level": "high",
+        "active_hours": ["05:00-22:00"],
+        "restrictions": ["heavy_pedestrian_traffic", "loading_zone_06:00-08:00", "vendor_priority"],
+        "landmarks": ["Chợ Tân Thành", "Chợ đêm", "Khu ẩm thực Lê Trọng Tấn", "Siêu thị mini"],
+        "address_range": "Đường Lê Trọng Tấn (khu chợ)"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6300, 10.8050],
+          [106.6360, 10.8050],
+          [106.6360, 10.8110],
+          [106.6300, 10.8110],
+          [106.6300, 10.8050]
+        ]]
+      }
+    },
+    {
+      "type": "Feature", 
+      "id": "tan_thanh_temple_area",
+      "properties": {
+        "zone_id": "TT_007",
+        "name": "Khu di tích văn hóa",
+        "zone_type": "cultural_heritage",
+        "speed_limit_kmh": 18,
+        "description": "Chùa Tân Thành và các di tích văn hóa",
+        "enforcement_level": "high",
+        "active_hours": ["05:00-21:00"],
+        "restrictions": ["respect_worship_hours", "festival_crowd_priority", "quiet_zone"],
+        "landmarks": ["Chùa Tân Thành", "Đền thờ Liệt sĩ", "Nhà văn hóa phường"],
+        "address_range": "Đường nội bộ khu chùa"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6380, 10.8070],
+          [106.6440, 10.8070],
+          [106.6440, 10.8130],
+          [106.6380, 10.8130],
+          [106.6380, 10.8070]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "tan_thanh_park",
+      "properties": {
+        "zone_id": "TT_008",
+        "name": "Công viên Tân Thành",
+        "zone_type": "park_recreational", 
+        "speed_limit_kmh": 15,
+        "description": "Công viên và khu vui chơi giải trí",
+        "enforcement_level": "medium",
+        "active_hours": ["05:00-22:00"],
+        "restrictions": ["children_priority", "elderly_exercise_area", "pet_walking_zone"],
+        "landmarks": ["Công viên Tân Thành", "Sân thể thao", "Khu vui chơi trẻ em", "Đường chạy bộ"],
+        "address_range": "Công viên trung tâm phường"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.6350, 10.8040],
+          [106.6410, 10.8040],
+          [106.6410, 10.8100],
+          [106.6350, 10.8100],
+          [106.6350, 10.8040]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_le_trong_tan",
+      "properties": {
+        "route_id": "TT_RT_001",
+        "name": "Đường Lê Trọng Tấn",
+        "route_type": "main_arterial",
+        "speed_limit_kmh": 30,
+        "description": "Tuyến đường chính xuyên suốt phường",
+        "length_km": 2.1,
+        "direction": "two_way",
+        "bike_lane": true,
+        "enforcement_level": "high",
+        "traffic_lights": 4,
+        "bus_stops": 3
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6280, 10.8090],
+          [106.6320, 10.8090],
+          [106.6360, 10.8090],
+          [106.6400, 10.8090],
+          [106.6440, 10.8090]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_truong_chinh",
+      "properties": {
+        "route_id": "TT_RT_002", 
+        "name": "Đường Trường Chinh",
+        "route_type": "main_arterial",
+        "speed_limit_kmh": 35,
+        "description": "Tuyến đường huyết mạch phía Bắc phường",
+        "length_km": 1.8,
+        "direction": "two_way",
+        "bike_lane": true,
+        "enforcement_level": "medium",
+        "traffic_lights": 3,
+        "bus_stops": 2
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6280, 10.8180],
+          [106.6320, 10.8180],
+          [106.6360, 10.8180],
+          [106.6400, 10.8180],
+          [106.6440, 10.8180]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_au_co",
+      "properties": {
+        "route_id": "TT_RT_003",
+        "name": "Đường Âu Cơ",
+        "route_type": "secondary_road",
+        "speed_limit_kmh": 25,
+        "description": "Đường kết nối với khu y tế",
+        "length_km": 1.2,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "high",
+        "hospital_access": true
+      },
+      "geometry": {
+        "type": "LineString", 
+        "coordinates": [
+          [106.6250, 10.8100],
+          [106.6290, 10.8100],
+          [106.6330, 10.8100],
+          [106.6370, 10.8100]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_luy_ban_bich",
+      "properties": {
+        "route_id": "TT_RT_004",
+        "name": "Đường Lũy Bán Bích", 
+        "route_type": "local_road",
+        "speed_limit_kmh": 25,
+        "description": "Đường phía Nam phường, khu dân cư",
+        "length_km": 1.5,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "medium",
+        "residential_access": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6280, 10.8030],
+          [106.6320, 10.8030],
+          [106.6360, 10.8030],
+          [106.6400, 10.8030]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_pham_van_dong",
+      "properties": {
+        "route_id": "TT_RT_005",
+        "name": "Đường Phạm Văn Đồng",
+        "route_type": "boundary_road",
+        "speed_limit_kmh": 40,
+        "description": "Đường ranh giới phía Đông phường",
+        "length_km": 2.0,
+        "direction": "two_way", 
+        "bike_lane": true,
+        "enforcement_level": "low",
+        "inter_district_route": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6440, 10.8020],
+          [106.6440, 10.8060],
+          [106.6440, 10.8100],
+          [106.6440, 10.8140],
+          [106.6440, 10.8180]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_tan_son_nhi",
+      "properties": {
+        "route_id": "TT_RT_006",
+        "name": "Đường Tân Sơn Nhì",
+        "route_type": "boundary_road",
+        "speed_limit_kmh": 30,
+        "description": "Đường ranh giới phía Tây phường",
+        "length_km": 1.8,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "medium",
+        "industrial_access": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6250, 10.8020],
+          [106.6250, 10.8060],
+          [106.6250, 10.8100], 
+          [106.6250, 10.8140],
+          [106.6250, 10.8180]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_internal_01",
+      "properties": {
+        "route_id": "TT_RT_007",
+        "name": "Đường nội bộ 1",
+        "route_type": "local_street",
+        "speed_limit_kmh": 20,
+        "description": "Đường nội bộ khu dân cư Bắc",
+        "length_km": 0.8,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "low",
+        "residential_only": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6320, 10.8140],
+          [106.6340, 10.8150],
+          [106.6360, 10.8160],
+          [106.6380, 10.8170]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_internal_02",
+      "properties": {
+        "route_id": "TT_RT_008",
+        "name": "Đường nội bộ 2",
+        "route_type": "local_street", 
+        "speed_limit_kmh": 20,
+        "description": "Đường nội bộ khu dân cư Nam",
+        "length_km": 0.6,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "low",
+        "residential_only": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6300, 10.8040],
+          [106.6320, 10.8050],
+          [106.6340, 10.8060],
+          [106.6360, 10.8070]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_market_access",
+      "properties": {
+        "route_id": "TT_RT_009",
+        "name": "Đường vào chợ",
+        "route_type": "market_access",
+        "speed_limit_kmh": 15,
+        "description": "Đường dẫn vào khu chợ Tân Thành",
+        "length_km": 0.4,
+        "direction": "one_way",
+        "bike_lane": false,
+        "enforcement_level": "high",
+        "market_hours_only": true,
+        "loading_restrictions": "06:00-08:00"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6310, 10.8080],
+          [106.6320, 10.8080],
+          [106.6330, 10.8080],
+          [106.6340, 10.8080]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_school_access",
+      "properties": {
+        "route_id": "TT_RT_010",
+        "name": "Đường trường học",
+        "route_type": "school_access",
+        "speed_limit_kmh": 10,
+        "description": "Đường dẫn vào khu trường học",
+        "length_km": 0.5,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "maximum",
+        "school_hours_restriction": true,
+        "parent_pickup_zone": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6300, 10.8160],
+          [106.6310, 10.8160],
+          [106.6320, 10.8160],
+          [106.6330, 10.8160]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_hospital_access",
+      "properties": {
+        "route_id": "TT_RT_011",
+        "name": "Đường bệnh viện",
+        "route_type": "hospital_access",
+        "speed_limit_kmh": 8,
+        "description": "Đường dẫn vào khu y tế",
+        "length_km": 0.3,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "maximum",
+        "emergency_vehicle_priority": true,
+        "no_horn_zone": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6270, 10.8100],
+          [106.6280, 10.8100],
+          [106.6290, 10.8100],
+          [106.6300, 10.8100]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_park_circuit",
+      "properties": {
+        "route_id": "TT_RT_012",
+        "name": "Đường vòng công viên",
+        "route_type": "park_circuit",
+        "speed_limit_kmh": 12,
+        "description": "Đường vòng quanh công viên",
+        "length_km": 0.6,
+        "direction": "one_way_clockwise",
+        "bike_lane": true,
+        "enforcement_level": "medium",
+        "recreation_priority": true,
+        "jogging_path_sharing": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6350, 10.8060],
+          [106.6370, 10.8060],
+          [106.6390, 10.8070],
+          [106.6390, 10.8090],
+          [106.6370, 10.8090],
+          [106.6350, 10.8080],
+          [106.6350, 10.8060]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_alley_north_01",
+      "properties": {
+        "route_id": "TT_RT_013",
+        "name": "Hẻm Trường Chinh 01",
+        "route_type": "narrow_alley",
+        "speed_limit_kmh": 8,
+        "description": "Hẻm nhỏ khu dân cư, chỉ xe máy và xe đạp",
+        "length_km": 0.2,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "low",
+        "width_restriction": "under_3m",
+        "pedestrian_priority": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6310, 10.8180],
+          [106.6310, 10.8170],
+          [106.6310, 10.8160],
+          [106.6310, 10.8150]
+        ]
+      }
+    },
+    {
+      "type": "Feature", 
+      "id": "route_alley_south_01",
+      "properties": {
+        "route_id": "TT_RT_014",
+        "name": "Hẻm Lũy Bán Bích 01",
+        "route_type": "narrow_alley",
+        "speed_limit_kmh": 8,
+        "description": "Hẻm dẫn vào khu trọ sinh viên",
+        "length_km": 0.15,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "low",
+        "width_restriction": "under_3m",
+        "student_area": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6330, 10.8030],
+          [106.6330, 10.8040],
+          [106.6330, 10.8050]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "route_temple_access",
+      "properties": {
+        "route_id": "TT_RT_015",
+        "name": "Đường vào chùa",
+        "route_type": "temple_access",
+        "speed_limit_kmh": 10,
+        "description": "Đường dẫn vào Chùa Tân Thành",
+        "length_km": 0.25,
+        "direction": "two_way",
+        "bike_lane": false,
+        "enforcement_level": "high",
+        "worship_hours_restriction": true,
+        "festival_traffic_control": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6400, 10.8090],
+          [106.6410, 10.8090],
+          [106.6420, 10.8090],
+          [106.6430, 10.8090]
+        ]
+      }
+    }
+  ],
+  "enforcement_rules": {
+    "general_rules": {
+      "minimum_age": 16,
+      "helmet_required": true,
+      "license_required": false,
+      "insurance_recommended": true,
+      "maximum_power": "250W",
+      "maximum_assisted_speed": "25 km/h"
+    },
+    "time_based_restrictions": {
+      "school_hours": {
+        "morning": "06:30-08:00",
+        "afternoon": "16:30-18:00", 
+        "speed_reduction": 8,
+        "zones": ["TT_002"]
+      },
+      "market_hours": {
+        "peak": "06:00-08:00",
+        "evening": "17:00-19:00",
+        "speed_reduction": 5,
+        "zones": ["TT_006"]
+      },
+      "night_quiet": {
+        "hours": "22:00-06:00",
+        "speed_reduction": 5,
+        "zones": ["TT_004", "TT_005"]
+      }
+    },
+    "weather_restrictions": {
+      "rain": {
+        "speed_reduction": 10,
+        "enhanced_lighting": true
+      },
+      "fog": {
+        "speed_reduction": 15,
+        "mandatory_lighting": true
+      }
+    }
+  },
+  "violation_categories": {
+    "speed_violations": {
+      "minor": {
+        "threshold": "1-5 km/h over limit",
+        "fine": "150,000 VND",
+        "warning_first": true
+      },
+      "moderate": {
+        "threshold": "6-10 km/h over limit",
+        "fine": "300,000 VND"
+      },
+      "severe": {
+        "threshold": "11+ km/h over limit", 
+        "fine": "500,000 VND",
+        "device_confiscation": "repeat_offender"
+      }
+    },
+    "zone_violations": {
+      "school_zone": {
+        "description": "Speeding in school zones",
+        "fine": "400,000 VND",
+        "mandatory_safety_course": true
+      },
+      "hospital_zone": {
+        "description": "Disturbing hospital areas",
+        "fine": "350,000 VND"
+      },
+      "pedestrian_zone": {
+        "description": "Unauthorized entry to pedestrian areas", 
+        "fine": "250,000 VND"
+      }
+    }
+  },
+  "special_events": {
+    "market_days": {
+      "description": "Additional restrictions during market peak",
+      "affected_routes": ["TT_RT_009"],
+      "speed_limit_reduction": 5
+    },
+    "school_events": {
+      "description": "School ceremony or exam periods",
+      "affected_zones": ["TT_002"],
+      "temporary_restrictions": "no_ebikes_07:00-12:00"
+    },
+    "religious_festivals": {
+      "description": "Temple festival periods",
+      "affected_routes": ["TT_RT_015"],
+      "crowd_management": true
+    }
+  },
+  "emergency_contacts": {
+    "ward_police": "028-3962-xxxx",
+    "medical_emergency": "115", 
+    "traffic_control": "028-3962-yyyy",
+    "technical_support": "1900-xxxx"
+  }
+}

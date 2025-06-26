@@ -76,10 +76,10 @@ GPS_CONFIG: Dict[str, Any] = {
 
 MAP_CONFIG: Dict[str, Any] = {
     # File bản đồ zone / Zone map file
-    "map_file": str(MAPS_DIR / "hcmc_zones.json"),
+    "map_file": str(MAPS_DIR / "map.json"),
     
     # Backup map file / File bản đồ dự phòng
-    "backup_map_file": str(MAPS_DIR / "hcmc_zones_backup.json"),
+    "backup_map_file": str(MAPS_DIR / "map_backup.json"),
     
     # Khoảng cách buffer cho zone (mét) / Zone buffer distance (meters)
     "zone_buffer_meters": float(os.getenv("ZONE_BUFFER", "5.0")),
