@@ -35,12 +35,10 @@ for directory in [DATA_DIR, LOGS_DIR]:
 
 GPS_CONFIG: Dict[str, Any] = {
     # Cổng kết nối GPS / GPS connection port
-    # Linux: /dev/ttyUSB0, /dev/ttyACM0
-    # Windows: COM3, COM4, etc.
-    "port": os.getenv("GPS_PORT", "/dev/ttyUSB0"),
+    "port": os.getenv("GPS_PORT", "/dev/ttyS0"),  # Sửa thành ttyS0
     
     # Tốc độ baud / Baud rate
-    "baudrate": int(os.getenv("GPS_BAUDRATE", "9600")),
+    "baudrate": int(os.getenv("GPS_BAUDRATE", "115200")),
     
     # Timeout đọc dữ liệu (giây) / Read timeout (seconds)
     "timeout": int(os.getenv("GPS_TIMEOUT", "1")),
@@ -55,7 +53,21 @@ GPS_CONFIG: Dict[str, Any] = {
     "min_satellites": int(os.getenv("GPS_MIN_SATELLITES", "4")),
     
     # Bật chế độ debug / Enable debug mode
-    "debug": os.getenv("GPS_DEBUG", "False").lower() == "true"
+    "debug": os.getenv("GPS_DEBUG", "False").lower() == "true",
+    
+    # Retry attempts / Số lần thử lại
+    "retry_attempts": int(os.getenv("GPS_RETRY_ATTEMPTS", "3")),
+    
+    # Retry delay / Thời gian delay khi retry
+    "retry_delay": float(os.getenv("GPS_RETRY_DELAY", "2.0")),
+    
+    # Serial settings / Cấu hình serial
+    "bytesize": 8,
+    "parity": "N",
+    "stopbits": 1,
+    "xonxoff": False,
+    "rtscts": False,
+    "dsrdtr": False
 }
 
 # =============================================================================
