@@ -267,10 +267,15 @@ class CycleSentinelApp:
             if not self.use_simulator:
                 self.logger.system_info("Waiting for GPS fix...")
                 if hasattr(self.gps_handler, 'wait_for_fix'):
-                    if not self.gps_handler.wait_for_fix(timeout=30):
+                    if hasattr(self.gps_handler, 'data_filter'):
+                        self.gps_handler.data_filter._startup_mode = True
+
+                    if not self.gps_handler.wait_for_fix(timeout=10):  # 30 → 10 giây
                         self.logger.system_warning("GPS fix timeout - continuing anyway")
                     else:
-                        self.logger.system_info("GPS fix acquired")
+                        # ✅ Disable startup mode sau khi có fix
+                        if hasattr(self.gps_handler, 'data_filter'):
+                            self.gps_handler.data_filter._startup_mode = False
             
             self.logger.system_info("All components initialized successfully")
             return True
@@ -350,8 +355,9 @@ class CycleSentinelApp:
                         
                         else:
                             # No GPS data available
-                            if SYSTEM_CONFIG["debug_mode"]:
-                                print(".", end="", flush=True)  # Progress indicator
+                            # if SYSTEM_CONFIG["debug_mode"]:
+                            #     print(".", end="", flush=True)  # Progress indicator
+                            pass
                     
                     # Sleep for next cycle
                     time.sleep(GPS_CONFIG["read_interval"])

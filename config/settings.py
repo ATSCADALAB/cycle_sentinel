@@ -41,14 +41,15 @@ GPS_CONFIG: Dict[str, Any] = {
     "baudrate": int(os.getenv("GPS_BAUDRATE", "115200")),
     
     # Timeout đọc dữ liệu (giây) / Read timeout (seconds)
-    "timeout": int(os.getenv("GPS_TIMEOUT", "1")),
+    "timeout": float(os.getenv("GPS_TIMEOUT", "0.1")),
     
     # Tần suất đọc GPS (giây) / GPS read frequency (seconds)
-    "read_interval": float(os.getenv("GPS_READ_INTERVAL", "1.0")),
+    "read_interval": float(os.getenv("GPS_READ_INTERVAL", "0.1")),
     
     # Độ chính xác tối thiểu (mét) / Minimum accuracy (meters)
     "min_accuracy": float(os.getenv("GPS_MIN_ACCURACY", "10.0")),
-    
+    # Giảm thời gian chờ fix
+    "wait_fix_timeout": float(os.getenv("GPS_WAIT_FIX_TIMEOUT", "10.0")),
     # Số vệ tinh tối thiểu / Minimum satellites
     "min_satellites": int(os.getenv("GPS_MIN_SATELLITES", "4")),
     
@@ -56,10 +57,10 @@ GPS_CONFIG: Dict[str, Any] = {
     "debug": os.getenv("GPS_DEBUG", "False").lower() == "true",
     
     # Retry attempts / Số lần thử lại
-    "retry_attempts": int(os.getenv("GPS_RETRY_ATTEMPTS", "3")),
+    "retry_attempts": int(os.getenv("GPS_RETRY_ATTEMPTS", "1")),
     
     # Retry delay / Thời gian delay khi retry
-    "retry_delay": float(os.getenv("GPS_RETRY_DELAY", "2.0")),
+    "retry_delay": float(os.getenv("GPS_RETRY_DELAY", "0.1")),
     
     # Serial settings / Cấu hình serial
     "bytesize": 8,
@@ -189,7 +190,7 @@ SYSTEM_CONFIG: Dict[str, Any] = {
     "startup_delay": float(os.getenv("STARTUP_DELAY", "2.0")),
     
     # Chu kỳ heartbeat (giây) / Heartbeat interval (seconds)
-    "heartbeat_interval": float(os.getenv("HEARTBEAT_INTERVAL", "30.0"))
+    "heartbeat_interval": float(os.getenv("HEARTBEAT_INTERVAL", "2.0"))
 }
 
 # =============================================================================

@@ -213,7 +213,8 @@ class GPSHandler:
             "last_fix_time": None,
             "uptime_start": datetime.now()
         }
-        
+        self.non_blocking_mode = True
+        self.read_buffer = ""
         self.logger.system_info("GPS Handler initialized", {
             "device_id": SYSTEM_CONFIG["device_id"],
             "gps_port": GPS_CONFIG["port"],
@@ -289,30 +290,54 @@ class GPSHandler:
     
     def _test_connection(self) -> bool:
         """
-        Test kết nối GPS bằng cách đọc vài dòng dữ liệu
-        Test GPS connection by reading a few lines of data
-        
-        Returns:
-            bool: True nếu test thành công / True if test successful
+        Test kết nối GPS - IMPROVED VERSION
+        Test GPS connection with better error handling
         """
         try:
-            test_attempts = 5
-            for attempt in range(test_attempts):
-                line = self.serial_connection.readline().decode('ascii', errors='replace').strip()
-                
-                if line.startswith('$'):
-                    self.logger.system_debug(f"GPS test read successful: {line[:20]}...")
-                    return True
-                
-                time.sleep(0.1)
+            # 🚀 FLUSH BUFFER trước khi test
+            if self.serial_connection.in_waiting > 0:
+                self.serial_connection.reset_input_buffer()
             
-            self.logger.system_warning("GPS test failed - no valid NMEA data received")
+            # 🚀 WAIT cho GPS module ready
+            time.sleep(0.5)  # GPS module initialization time
+            
+            # 🚀 TĂNG timeout và attempts
+            test_attempts = 15  # Tăng từ 5 → 15
+            valid_sentences = 0
+            
+            self.logger.system_debug("Testing GPS connection...")
+            
+            for attempt in range(test_attempts):
+                try:
+                    # Đọc với timeout ngắn
+                    line = self.serial_connection.readline().decode('ascii', errors='replace').strip()
+                    
+                    if line.startswith('$') and len(line) > 10:
+                        valid_sentences += 1
+                        self.logger.system_debug(f"GPS test #{attempt+1}: {line[:30]}...")
+                        
+                        # 🚀 CẦN ÍT NHẤT 2 VALID SENTENCES
+                        if valid_sentences >= 2:
+                            self.logger.system_info(f"GPS test passed after {attempt+1} attempts")
+                            return True
+                            
+                    elif line:
+                        self.logger.system_debug(f"GPS test #{attempt+1}: Invalid format: {line[:20]}")
+                    else:
+                        self.logger.system_debug(f"GPS test #{attempt+1}: No data")
+                    
+                    time.sleep(0.2)  # Tăng từ 0.1s → 0.2s
+                    
+                except Exception as e:
+                    self.logger.system_debug(f"GPS test #{attempt+1} error: {e}")
+                    time.sleep(0.1)
+            
+            self.logger.system_warning(f"GPS test failed - only {valid_sentences} valid sentences in {test_attempts} attempts")
             return False
             
         except Exception as e:
-            self.logger.system_error("GPS connection test failed", {"error": str(e)}, e)
+            self.logger.system_error(f"GPS connection test error: {e}")
             return False
-    
     def disconnect(self):
         """
         Ngắt kết nối GPS
@@ -550,12 +575,12 @@ class GPSHandler:
             
             # Kiểm tra tuổi của fix / Check fix age
             age = (datetime.now() - self.current_fix.timestamp).total_seconds()
-            if age > 30:  # Fix quá 30 giây thì coi như cũ / Fix older than 30s is stale
+            if age > 5:  # Fix quá 30 giây thì coi như cũ / Fix older than 30s is stale
                 return False
             
             return self.current_fix.valid
     
-    def wait_for_fix(self, timeout: float = 30.0) -> bool:
+    def wait_for_fix(self, timeout: float = 10.0) -> bool:
         """
         Chờ có GPS fix hợp lệ
         Wait for valid GPS fix
@@ -578,7 +603,7 @@ class GPSHandler:
                 })
                 return True
             
-            time.sleep(1)
+            time.sleep(0.2)
         
         self.logger.system_warning("GPS fix timeout", {"timeout": timeout})
         return False
