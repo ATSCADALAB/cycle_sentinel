@@ -347,7 +347,7 @@ class CycleSentinelApp:
                                 self.stats["last_violation_time"] = datetime.now()
                                 
                                 # Print violation info to console
-                                self._print_violation_info(violation_data, gps_data)
+                                self._print_professional_log(violation_data, gps_data, has_violation=True)
                             else:
                                 # Print normal GPS info
                                 if SYSTEM_CONFIG["debug_mode"]:
@@ -439,36 +439,36 @@ class CycleSentinelApp:
         else:
             self.logger.system_debug("System health check passed")
     
-    def _print_violation_info(self, violation_data: Dict[str, Any], gps_data: Dict[str, Any]):
-        """In thông tin vi phạm ra console"""
-        timestamp = datetime.now().strftime("%H:%M:%S")
-        violation_type = violation_data["violation_type"]
+    def _print_professional_log(self, violation_data: Optional[Dict[str, Any]], gps_data: Dict[str, Any], has_violation: bool):
+        """In log theo format chuyên nghiệp 1 dòng"""
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        lat = gps_data["latitude"]
+        lon = gps_data["longitude"]
+        speed = gps_data["speed_kmh"]
         
-        if violation_type == "speed_violation":
-            current_speed = violation_data["speed_data"]["current_speed"]
-            speed_limit = violation_data["speed_data"]["speed_limit"]
-            excess_speed = violation_data["speed_data"]["excess_speed"]
-            
-            print(f"\n🚨 [{timestamp}] PHÁT HIỆN VI PHẠM TỐC ĐỘ!")
-            print(f"   📍 Vị trí: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
-            print(f"   🏃 Tốc độ: {current_speed:.1f} km/h (Giới hạn: {speed_limit:.1f} km/h)")
-            print(f"   ⚡ Vượt quá: +{excess_speed:.1f} km/h")
-            print(f"   🎯 Khu vực: {violation_data['zone_info']['zone_name']}")
-            print(f"   📊 Độ tin cậy: {violation_data['confidence']:.2f}")
-            print(f"   💾 ĐÃ LOG VÀO FILE: logs/violations.log")
-            
-        elif violation_type == "restricted_zone":
-            current_speed = violation_data["speed_data"]["current_speed"]
-            
-            print(f"\n🚫 [{timestamp}] PHÁT HIỆN VI PHẠM KHU VỰC CẤM!")
-            print(f"   📍 Vị trí: {gps_data['latitude']:.6f}, {gps_data['longitude']:.6f}")
-            print(f"   🏃 Tốc độ: {current_speed:.1f} km/h trong KHU VỰC CẤM")
-            print(f"   🎯 Khu vực: {violation_data['zone_info']['zone_name']}")
-            print(f"   📊 Độ tin cậy: {violation_data['confidence']:.2f}")
-            print(f"   💾 ĐÃ LOG VÀO FILE: logs/violations.log")
+        # Get zone info
+        zone = self.map_handler.find_zone_at_position(lat, lon)
+        zone_name = zone.name if zone else "Unknown Zone"
+        speed_limit = zone.speed_limit if zone else 25.0
         
-        print()
-    
+        # Build violation status
+        if not has_violation:
+            violation_status = "NO_VIOLATIONS"
+        else:
+            violation_details = []
+            violation_type = violation_data["violation_type"]
+            
+            if violation_type == "speed_violation":
+                excess_speed = violation_data["speed_data"]["excess_speed"]
+                violation_details.append(f"SPEED_EXCEEDED:{excess_speed:.1f}kmh")
+            elif violation_type == "restricted_zone":
+                violation_details.append("RESTRICTED_ZONE_ENTRY")
+            
+            violation_status = "|".join(violation_details) if violation_details else "VIOLATION_DETECTED"
+        
+        # Single line professional format
+        print(f"[{timestamp}] LAT:{lat:.6f} LON:{lon:.6f} SPEED:{speed:.1f}kmh ZONE:{zone_name} LIMIT:{speed_limit}kmh STATUS:{violation_status}")
+
     def _print_gps_info(self, gps_data: Dict[str, Any]):
         """In thông tin GPS bình thường ra console"""
         timestamp = datetime.now().strftime("%H:%M:%S")
