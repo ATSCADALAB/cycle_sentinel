@@ -322,8 +322,62 @@ class CycleSentinelApp:
             self.is_running = False
             return False
     
+    # def _monitoring_loop(self):
+    #     """Vòng lặp giám sát chính"""
+    #     self.logger.system_info("Monitoring loop started")
+        
+    #     try:
+    #         while self.is_running and not self.shutdown_requested:
+    #             try:
+    #                 with PerformanceTimer("monitoring_cycle"):
+    #                     # Read GPS data
+    #                     gps_data = self.gps_handler.read_position()
+                        
+    #                     if gps_data:
+    #                         self.stats["total_gps_reads"] += 1
+    #                         self.stats["last_gps_time"] = datetime.now()
+                            
+    #                         # ✅ ĐOẠN NÀY QUAN TRỌNG - CHECK VIOLATION VÀ LOG
+    #                         violation_data = self.violation_checker.check_violation(gps_data)
+                            
+    #                         if violation_data:
+    #                             # ✅ LOG VIOLATION - ĐÂY LÀ CHỖ LOGGING DIỄN RA
+    #                             self.logger.log_violation(violation_data)
+    #                             self.stats["total_violations"] += 1
+    #                             self.stats["last_violation_time"] = datetime.now()
+                                
+    #                             # Print violation info to console
+    #                             self._print_professional_log(violation_data, gps_data, has_violation=True)
+    #                         else:
+    #                             # Print normal GPS info
+    #                             if SYSTEM_CONFIG["debug_mode"]:
+    #                                 self._print_professional_log(None, gps_data, has_violation=False)
+                        
+    #                     else:
+    #                         # No GPS data available
+    #                         # if SYSTEM_CONFIG["debug_mode"]:
+    #                         #     print(".", end="", flush=True)  # Progress indicator
+    #                         pass
+                    
+    #                 # Sleep for next cycle
+    #                 time.sleep(GPS_CONFIG["read_interval"])
+                    
+    #             except Exception as e:
+    #                 self.logger.system_error("Error in monitoring loop", {
+    #                     "error": str(e)
+    #                 }, e)
+    #                 self.stats["error_count"] += 1
+    #                 time.sleep(1)  # Brief pause on error
+        
+    #     except Exception as e:
+    #         self.logger.system_critical("Critical error in monitoring loop", {
+    #             "error": str(e)
+    #         }, e)
+        
+    #     finally:
+    #         self.logger.system_info("Monitoring loop ended")
     def _monitoring_loop(self):
-        """Vòng lặp giám sát chính"""
+        """Vòng lặp giám sát chính - Enhanced với GPS tracking logging"""
         self.logger.system_info("Monitoring loop started")
         
         try:
@@ -337,11 +391,25 @@ class CycleSentinelApp:
                             self.stats["total_gps_reads"] += 1
                             self.stats["last_gps_time"] = datetime.now()
                             
-                            # ✅ ĐOẠN NÀY QUAN TRỌNG - CHECK VIOLATION VÀ LOG
+                            # ✅ GET ZONE INFO
+                            lat, lon = gps_data["latitude"], gps_data["longitude"]
+                            current_zone = self.map_handler.find_zone_at_position(lat, lon)
+                            zone_info = {
+                                "zone_name": current_zone.name if current_zone else "Outside Zone",
+                                "zone_type": current_zone.zone_type if current_zone else "unknown",
+                                "speed_limit": current_zone.speed_limit if current_zone else 25.0,
+                                "zone_id": current_zone.zone_id if current_zone else None
+                            }
+                            
+                            # ✅ LOG GPS TRACKING DATA VÀO FILE
+                            if LOGGING_CONFIG["log_gps_tracking"]:
+                                self.logger.log_gps_tracking(gps_data, zone_info)
+                            
+                            # Check violation
                             violation_data = self.violation_checker.check_violation(gps_data)
                             
                             if violation_data:
-                                # ✅ LOG VIOLATION - ĐÂY LÀ CHỖ LOGGING DIỄN RA
+                                # Log violation
                                 self.logger.log_violation(violation_data)
                                 self.stats["total_violations"] += 1
                                 self.stats["last_violation_time"] = datetime.now()
@@ -355,9 +423,8 @@ class CycleSentinelApp:
                         
                         else:
                             # No GPS data available
-                            # if SYSTEM_CONFIG["debug_mode"]:
-                            #     print(".", end="", flush=True)  # Progress indicator
-                            pass
+                            if SYSTEM_CONFIG["debug_mode"]:
+                                print(".", end="", flush=True)
                     
                     # Sleep for next cycle
                     time.sleep(GPS_CONFIG["read_interval"])
@@ -367,7 +434,7 @@ class CycleSentinelApp:
                         "error": str(e)
                     }, e)
                     self.stats["error_count"] += 1
-                    time.sleep(1)  # Brief pause on error
+                    time.sleep(1)
         
         except Exception as e:
             self.logger.system_critical("Critical error in monitoring loop", {
@@ -376,7 +443,6 @@ class CycleSentinelApp:
         
         finally:
             self.logger.system_info("Monitoring loop ended")
-    
     def _health_check_loop(self):
         """Vòng lặp kiểm tra sức khỏe hệ thống"""
         self.logger.system_info("Health check loop started")
@@ -467,7 +533,7 @@ class CycleSentinelApp:
             violation_status = "|".join(violation_details) if violation_details else "VIOLATION_DETECTED"
         
         # Single line professional format
-        print(f"[{timestamp}] LAT:{lat:.6f} LON:{lon:.6f} SPEED:{speed:.1f}kmh ZONE:{zone_name} LIMIT:{speed_limit}kmh STATUS:{violation_status}")
+        print(f"[{timestamp}] LAT:{lat:.6f} LON:{lon:.6f} SPEED:{speed:.1f}kmh LIMIT:{speed_limit}kmh STATUS:{violation_status}")
 
     def _print_gps_info(self, gps_data: Dict[str, Any]):
         """In thông tin GPS bình thường ra console"""
@@ -609,17 +675,14 @@ class CycleSentinelApp:
         print("\n" + "="*60)
         print("🚴 CYCLE SENTINEL - E-BIKE MONITORING SYSTEM")
         print("="*60)
-        print(f"📱 Device ID: {SYSTEM_CONFIG['device_id']}")
-        print(f"🌐 GPS Mode: {'Simulator' if self.use_simulator else 'Hardware'}")
-        print(f"🗺️  Map Zones: {len(self.map_handler.zones)} loaded")
-        print(f"⚙️  Debug Mode: {'ON' if SYSTEM_CONFIG['debug_mode'] else 'OFF'}")
-        print(f"📊 Monitoring: GPS + Violations")
-        print(f"🔄 Update Interval: {GPS_CONFIG['read_interval']}s")
-        print(f"💾 Logs Directory: {LOGS_DIR}")
+        print(f" Device ID: {SYSTEM_CONFIG['device_id']}")
+        print(f"GPS Mode: {'Simulator' if self.use_simulator else 'Hardware'}")
+        print(f"Map Zones: {len(self.map_handler.zones)} loaded")
+        print(f"Debug Mode: {'ON' if SYSTEM_CONFIG['debug_mode'] else 'OFF'}")
+        print(f"Monitoring: GPS + Violations")
+        print(f"Update Interval: {GPS_CONFIG['read_interval']}s")
+        print(f"Logs Directory: {LOGS_DIR}")
         print("="*60)
-        print("🟢 System is RUNNING - Press Ctrl+C to stop")
-        print("📝 Vi phạm sẽ được log vào: logs/violations.log")
-        print("📋 System logs: logs/system.log")
         print("="*60)
         print()
 

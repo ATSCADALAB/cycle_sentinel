@@ -142,8 +142,8 @@ class CycleSentinelLogger:
         # Thêm handlers / Add handlers
         logger.addHandler(file_handler)
         
-        if LOGGING_CONFIG["log_to_console"]:
-            logger.addHandler(console_handler)
+        # if LOGGING_CONFIG["log_to_console"]:
+        #     logger.addHandler(console_handler)
         
         # Ngăn duplicate logs / Prevent duplicate logs
         logger.propagate = False
@@ -477,7 +477,105 @@ def log_system_shutdown():
     logger.system_info("=== CYCLE SENTINEL SHUTDOWN ===", {
         "timestamp": datetime.now().isoformat()
     })
+def log_gps_tracking(self, gps_data: Dict[str, Any], zone_info: Optional[Dict[str, Any]] = None):
+    """
+    ✅ MỚI: Log GPS tracking data vào file riêng biệt
+    Log GPS tracking data to separate file
+    
+    Args:
+        gps_data: GPS data theo GPS_DATA_SCHEMA
+        zone_info: Thông tin zone hiện tại (optional)
+    """
+    try:
+        # Tạo tracking entry với đầy đủ thông tin
+        tracking_entry = {
+            "timestamp": gps_data.get("timestamp", datetime.now().isoformat()),
+            "device_id": SYSTEM_CONFIG["device_id"],
+            "location": {
+                "latitude": gps_data.get("latitude", 0.0),
+                "longitude": gps_data.get("longitude", 0.0),
+                "accuracy": gps_data.get("accuracy", 0.0)
+            },
+            "speed_data": {
+                "current_speed": gps_data.get("speed_kmh", 0.0),
+                "speed_limit": zone_info.get("speed_limit", 25.0) if zone_info else 25.0
+            },
+            "gps_quality": {
+                "satellites": gps_data.get("satellites", 0),
+                "valid": gps_data.get("valid", False),
+                "hdop": gps_data.get("hdop", 0.0)
+            },
+            "zone_info": zone_info if zone_info else {
+                "zone_name": "Unknown",
+                "zone_type": "unknown"
+            },
+            "logged_at": datetime.now().isoformat()
+        }
+        
+        # ✅ Log vào file tracking.log
+        if hasattr(self, 'tracking_logger') and self.tracking_logger:
+            self.tracking_logger.info(json.dumps(tracking_entry, ensure_ascii=False))
+        
+        # Log summary vào system log
+        self.system_info(f"GPS tracking logged", {
+            "lat": tracking_entry["location"]["latitude"],
+            "lon": tracking_entry["location"]["longitude"], 
+            "speed": tracking_entry["speed_data"]["current_speed"],
+            "zone": tracking_entry["zone_info"]["zone_name"]
+        })
+        
+    except Exception as e:
+        self.system_error("Failed to log GPS tracking", {
+            "error": str(e),
+            "gps_data": gps_data
+        }, e)
 
+def _setup_loggers(self):
+    """
+    ✅ ENHANCED: Thêm tracking logger vào setup
+    Enhanced setup with tracking logger
+    """
+    # Tạo thư mục logs nếu chưa có
+    LOGS_DIR.mkdir(exist_ok=True)
+    
+    # System Logger - cho các sự kiện hệ thống
+    self.system_logger = self._create_logger(
+        name="cycle_sentinel.system",
+        log_file=LOGGING_CONFIG["system_log_file"],
+        level=LOGGING_CONFIG["log_level"]
+    )
+    
+    # Violation Logger - cho các vi phạm
+    self.violation_logger = self._create_logger(
+        name="cycle_sentinel.violations",
+        log_file=LOGGING_CONFIG["violation_log_file"],
+        level="INFO",
+        formatter_type="violation"
+    )
+    
+    # ✅ TRACKING LOGGER - MỚI: Cho GPS tracking data
+    self.tracking_logger = self._create_logger(
+        name="cycle_sentinel.tracking",
+        log_file=LOGGING_CONFIG["tracking_log_file"],  # File mới
+        level="INFO",
+        formatter_type="tracking"
+    )
+    
+    # GPS Logger - cho debug GPS data thô
+    self.gps_logger = self._create_logger(
+        name="cycle_sentinel.gps",
+        log_file=LOGGING_CONFIG["gps_log_file"],
+        level="DEBUG",
+        formatter_type="simple"
+    )
+    
+    # Performance Logger - cho monitoring hiệu suất
+    self.performance_logger = self._create_logger(
+        name="cycle_sentinel.performance", 
+        log_file=str(LOGS_DIR / "performance.log"),
+        level="INFO",
+        formatter_type="simple"
+    )
 # Context manager cho performance logging / Context manager for performance logging
 class PerformanceTimer:
     """

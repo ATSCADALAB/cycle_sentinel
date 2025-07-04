@@ -38,7 +38,7 @@ GPS_CONFIG: Dict[str, Any] = {
     "port": os.getenv("GPS_PORT", "/dev/ttyS0"),  # Sửa thành ttyS0
     
     # Tốc độ baud / Baud rate
-    "baudrate": int(os.getenv("GPS_BAUDRATE", "115200")),
+    "baudrate": int(os.getenv("GPS_BAUDRATE", "9600")),
     
     # Timeout đọc dữ liệu (giây) / Read timeout (seconds)
     "timeout": float(os.getenv("GPS_TIMEOUT", "0.1")),
@@ -125,7 +125,43 @@ VIOLATION_CONFIG: Dict[str, Any] = {
         "wrong_direction"       # Đi sai chiều / Wrong direction (if implemented)
     ]
 }
-
+LOGGING_CONFIG: Dict[str, Any] = {
+    # File log vi phạm / Violation log file
+    "violation_log_file": str(LOGS_DIR / "violations.log"),
+    
+    # File log hệ thống / System log file  
+    "system_log_file": str(LOGS_DIR / "system.log"),
+    
+    # ✅ MỚI: File log GPS tracking / GPS tracking log file
+    "tracking_log_file": str(LOGS_DIR / "tracking.log"),
+    
+    # File log GPS data thô (cho debug) / Raw GPS data log file (for debugging)
+    "gps_log_file": str(LOGS_DIR / "gps_data.log"),
+    
+    # Mức độ log / Log level
+    "log_level": os.getenv("LOG_LEVEL", "INFO"),
+    
+    # Format log / Log format
+    "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    
+    # Format thời gian / Time format
+    "time_format": "%Y-%m-%d %H:%M:%S",
+    
+    # Kích thước file log tối đa (bytes) / Maximum log file size (bytes)
+    "max_log_size": int(os.getenv("MAX_LOG_SIZE", "10485760")),  # 10MB
+    
+    # Số file backup / Number of backup files
+    "backup_count": int(os.getenv("LOG_BACKUP_COUNT", "5")),
+    
+    # Log ra console / Log to console
+    "log_to_console": os.getenv("LOG_TO_CONSOLE", "True").lower() == "true",
+    
+    # ✅ MỚI: Log GPS tracking data / Log GPS tracking data
+    "log_gps_tracking": os.getenv("LOG_GPS_TRACKING", "True").lower() == "true",
+    
+    # Log GPS data thô (chỉ cho debug) / Log raw GPS data (debug only)
+    "log_gps_data": os.getenv("LOG_GPS_DATA", "False").lower() == "true"
+}
 # =============================================================================
 # LOGGING CONFIGURATION / CẤU HÌNH LOGGING
 # =============================================================================
